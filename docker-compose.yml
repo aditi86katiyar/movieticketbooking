@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  theatre-service:
+    image: aditikatiyar/theatreapp:v3
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      SPRING_KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      SPRING_KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      SPRING_KAFKA_BOOTSTRAP-SERVERS: "kafka:9092"
+      SPRING_KAFKA_PRODUCER_KEY_SERIALIZER: org.apache.kafka.common.serialization.StringSerializer
+      SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: org.springframework.kafka.support.serializer.JsonSerializer
+      SPRING_DATA_MONGODB_URI: "mongodb+srv://new_user:Newuser12345@cluster0.eivqluj.mongodb.net/theatre?retryWrites=true&w=majority"
+      SPRING_DATA_MONGODB_USERNAME: "new_user"
+      SPRING_DATA_MONGODB_PASSWORD: "Newuser12345"
+      MONGODB_URI="mongodb+srv://new_user:Newuser12345@cluster0.eivqluj.mongodb.net/theatre?retryWrites=true&w=majority"
+      
+    ports:
+      - "8082:8082"
+    networks:
+      - test_network
+      
+networks:
+    test_network:
+      driver: bridge
