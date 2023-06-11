@@ -9,7 +9,7 @@ metadata:
     io.kompose.service: theatre-service
   name: theatre-service
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       io.kompose.service: theatre-service
@@ -21,7 +21,7 @@ spec:
         kompose.version: 1.28.0 (HEAD)
       creationTimestamp: null
       labels:
-        io.kompose.network/psjavadomainexercise-default: "true"
+        io.kompose.network/movieticketbooking-test-network: "true"
         io.kompose.service: theatre-service
     spec:
       containers:
@@ -32,10 +32,22 @@ spec:
               value: mongodb+srv://new_user:Newuser12345@cluster0.eivqluj.mongodb.net/theatre?retryWrites=true&w=majority
             - name: SPRING_DATA_MONGODB_USERNAME
               value: new_user
-          image: aditikatiyar/theatreapp:v2
+            - name: SPRING_KAFKA_ADVERTISED_LISTENERS
+              value: PLAINTEXT://kafka:9092
+            - name: SPRING_KAFKA_BOOTSTRAP-SERVERS
+              value: kafka:9092
+            - name: SPRING_KAFKA_LISTENERS
+              value: PLAINTEXT://0.0.0.0:9092
+            - name: SPRING_KAFKA_PRODUCER_KEY_SERIALIZER
+              value: org.apache.kafka.common.serialization.StringSerializer
+            - name: SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER
+              value: org.springframework.kafka.support.serializer.JsonSerializer
+            - name: SPRING_KAFKA_ZOOKEEPER_CONNECT
+              value: zookeeper:2181
+          image: aditikatiyar/theatreapp:v3
           name: theatre-service
           ports:
-            - containerPort: 8081
+            - containerPort: 8082
           resources: {}
       restartPolicy: Always
 status: {}
