@@ -15,9 +15,7 @@ services:
       SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: org.springframework.kafka.support.serializer.JsonSerializer
       SPRING_DATA_MONGODB_URI: "mongodb+srv://new_user:Newuser12345@cluster0.eivqluj.mongodb.net/theatre?retryWrites=true&w=majority"
       SPRING_DATA_MONGODB_USERNAME: "new_user"
-      SPRING_DATA_MONGODB_PASSWORD: "Newuser12345"
-      MONGODB_URI="mongodb+srv://new_user:Newuser12345@cluster0.eivqluj.mongodb.net/theatre?retryWrites=true&w=majority"
-      
+      SPRING_DATA_MONGODB_PASSWORD: "Newuser12345" 
     ports:
       - "8082:8082"
     networks:
