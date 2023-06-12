@@ -9,6 +9,7 @@ metadata:
     io.kompose.service: theatre-service
   name: theatre-service
 spec:
+  type: LoadBalancer                # Add this line to specify the service type as LoadBalancer
   ports:
     - name: "8082"
       port: 8082
