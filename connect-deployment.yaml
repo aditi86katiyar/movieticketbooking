@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-kafka.yml
+    kompose.version: 1.28.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: connect
+  name: connect
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: connect
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose-kafka.yml
+        kompose.version: 1.28.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/movieticketbooking-test-network: "true"
+        io.kompose.service: connect
+    spec:
+      containers:
+        - env:
+            - name: CONNECT_BOOTSTRAP_SERVERS
+              value: kafka:9092
+            - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
+              value: "1"
+            - name: CONNECT_CONFIG_STORAGE_TOPIC
+              value: seatReservedTopic
+            - name: CONNECT_GROUP_ID
+              value: "1"
+            - name: CONNECT_INTERNAL_KEY_CONVERTER
+              value: org.apache.kafka.connect.json.JsonConverter
+            - name: CONNECT_INTERNAL_VALUE_CONVERTER
+              value: org.apache.kafka.connect.json.JsonConverter
+            - name: CONNECT_KEY_CONVERTER
+              value: org.apache.kafka.connect.json.JsonConverter
+            - name: CONNECT_LOG4J_LOGGERS
+              value: org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR
+            - name: CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
+              value: "1"
+            - name: CONNECT_OFFSET_STORAGE_TOPIC
+              value: my_connect_offsets
+            - name: CONNECT_PLUGIN_PATH
+              value: /usr/share/java,/usr/share/confluent-hub-components
+            - name: CONNECT_REST_ADVERTISED_HOST_NAME
+              value: connect
+            - name: CONNECT_REST_ADVERTISED_PORT
+              value: "8083"
+            - name: CONNECT_REST_PORT
+              value: "8083"
+            - name: CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
+              value: "1"
+            - name: CONNECT_STATUS_STORAGE_TOPIC
+              value: my_connect_statuses
+            - name: CONNECT_VALUE_CONVERTER
+              value: org.apache.kafka.connect.json.JsonConverter
+          image: confluentinc/cp-kafka-connect:latest
+          name: connect
+          ports:
+            - containerPort: 8083
+          resources: {}
+          volumeMounts:
+            - mountPath: /etc/kafka-connect/mongo-kafka-source.properties
+              name: connect-claim0
+      restartPolicy: Always
+      volumes:
+        - name: connect-claim0
+          persistentVolumeClaim:
+            claimName: connect-claim0
+status: {}
